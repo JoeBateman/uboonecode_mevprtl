@@ -16,7 +16,7 @@ icarus_detector_box: [-368.49, 368.49, -191.86, 144.96, -904.950652270838, 904.9
 
 numi_kaon: {
   tool_type: NuMiKaonGen
-  SearchPath: "/cvmfs/sbn.osgstorage.org/pnfs/fnal.gov/usr/sbn/persistent/stash/physics/beam/GENIE/NuMI/standard/v02_00/"
+  SearchPath: "/cvmfs/sbn.osgstorage.org/pnfs/fnal.gov/usr/sbn/persistent/stash/physics/beam/GENIE/NuMI/standard/v03_02/"
   FluxFiles: ["*.root"]
   TreeName: "dk2nuTree"
   MetaTreeName: "dkmetaTree"
@@ -44,47 +44,5 @@ numi_psuedoscalar: {
   NSkipLines: 1
   FluxCopyMethod: DIRECT
 }
-
-ray_trace_box: {
-  tool_type: RayTraceBox
-  # Volume: volCryostat
-  Box: @local::icarus_detector_box
-}
-
-rethrow_ray_trace_box: {
-  tool_type: ReThrowRayTraceBox
-  # Volume: volCryostat
-  Box: @local::icarus_detector_box
-
-  # weight computation
-  #ReferenceLabSolidAngle: 1.6e-6 # approx solid angle of ICARUS @NuMI target
-  #ReferencePriamryEnergy: 15 # GeV
-
-  ReferenceLabSolidAngle: 1e-4
-  ReferencePrimPDG: 321 
-}
-
-weighted_ray_trace_box: {
-  tool_type: WeightedRayTraceBox
-  # Volume: volCryostat
-  Box: @local::icarus_detector_box
-
-  # weight computation
-  ReferenceLabSolidAngle: 1e-4
-  ReferencePrimaryEnergy: 15. # GeV
-  ReferencePrimPDG: 321 
-}
-
-mixedweight_ray_trace_box: {
-  tool_type: MixedWeightRayTraceBox
-  Box: @local::icarus_detector_box
-  ReferenceLabSolidAngle: 4e-4
-  MaxWeightFudge: 2.
-  ReferencePrimaryEnergy: 15. # GeV
-  ReferencePrimPDG: 321 
-  NThrow: 250
-  FixNSuccess: false
-}
-
 
 END_PROLOG

@@ -16,7 +16,11 @@ uboone_bnb_beam2detector_rotation: [ 1, 0, 0,
 uboone_bnb_beam_origin: [0, 0, 0, -124.325, 0.93, 46336.3525] # cm in detector in beam frame
 
 # 1036 cm (Z) x 2.56 (X) x 2.32 (Y) - David C. on slack
-uboone_detector_box: [-128, 128, -116, 116, 0, 1036] #cm
+Roberto
+  3:21 PM
+I have x[0,256.35], y[-116.5,116.5], z[0,1036.8]
+
+uboone_detector_box: [0, 256, -116, 116, 0, 1036] #cm
 uboone_bnb_solid_angle_box: 2.766e-5 #front face / detector distance ^2 = 2.56*2.32/463.4^2
 
 

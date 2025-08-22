@@ -5,20 +5,28 @@
 #include "mcreco.fcl"
 #include "time_memory_tracker_microboone.fcl"
 #include "services_microboone.fcl"
-
-#include "standard_overlay_gen_griddriver.fcl"
+#include "genie_microboone_default+MEC.fcl"
 
 process_name: OverlayMeVPrtlGenBNB
 
 services:
 {
+  scheduler:    { defaultExceptions: false }    # Make all uncaught exceptions fatal.
   @table::microboone_simulation_services
   TFileService: { fileName: "hists_prodMeVPrtl_HNL_uboone_%p-%tc.root" }
   IFDH: {}
   TimeTracker:             @local::microboone_time_tracker
   MemoryTracker:           @local::microboone_memory_tracker
   RandomNumberGenerator: {} #ART native random number generator
+  FileCatalogMetadata:  @local::art_file_catalog_mc
   @table::microboone_g4_services
+}
+
+source:
+{
+  module_type: RootInput
+  saveMemoryObjectThreshold: 0
+  maxEvents: 10
 }
 
 physics:
@@ -50,3 +58,17 @@ outputs:
 }
 
 services.NuRandomService.policy: "random"
+
+#do not inherit clock configuration from the data
+services.DetectorClocksService.InheritClockConfig: false
+
+#use generator settings from prodgenie_bnb_nu_uboone.fcl
+physics.producers.generator.GlobalTimeOffset: 3125.
+physics.producers.generator.RandomTimeOffset: 1600.
+physics.producers.generator.TopVolume: "volCryostat"
+physics.producers.generator.BeamName: "booster"
+
+physics.producers.generator.FluxCopyMethod: "DIRECT"
+
+#reduce file name length
+outputs.out1.fileName: "%ifb_gen.root"
