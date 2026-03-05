@@ -1,4 +1,4 @@
-#include "hnl_config.fcl"
+#include "hnl_numi_config.fcl"
 
 # service configuration
 #include "largeantmodules_microboone.fcl"
@@ -13,7 +13,7 @@ services:
 {
   scheduler:    { defaultExceptions: false }    # Make all uncaught exceptions fatal.
   @table::microboone_simulation_services
-  TFileService: { fileName: "hists_prodMeVPrtl_HNL_uboone_%p-%tc.root" }
+  TFileService: { fileName: "hists_prodMeVPrtl_HNL_NuMI_uboone_%p-%tc.root" }
   IFDH: {}
   TimeTracker:             @local::microboone_time_tracker
   MemoryTracker:           @local::microboone_memory_tracker
@@ -48,7 +48,11 @@ physics:
   # trigger_paths: [ simulate ]
   end_paths:     [ stream ] 
   
+
+  
 } # physics
+
+
 
 outputs: 
 {
@@ -58,7 +62,7 @@ outputs:
     fileName: "prodMeVPrtl_HNL_uboone_%p-%tc.root" # default file name, can override from command line with -o or --output
     dataTier: "generated"
     compressionLevel: 1
-    # SelectEvents: ["mixer_path"]
+    #  SelectEvents: ["mixer_path"]
   }
 }
 
@@ -67,11 +71,13 @@ services.NuRandomService.policy: "random"
 #do not inherit clock configuration from the data
 services.DetectorClocksService.InheritClockConfig: false
 
-#use generator settings from prodgenie_bnb_nu_uboone.fcl
-physics.producers.generator.GlobalTimeOffset: 3125.
-physics.producers.generator.RandomTimeOffset: 1600.
-physics.producers.generator.TopVolume: "volCryostat"
-physics.producers.generator.BeamName: "booster"
+#use generator settings from prodgenie_numi_nu_uboone_rhc.fcl
+physics.producers.generator.POTPerSpill:        6e13
+physics.producers.generator.EventsPerSpill:     0
+physics.producers.generator.GlobalTimeOffset:   5627.5
+physics.producers.generator.RandomTimeOffset:   9600.
+physics.producers.generator.TopVolume:          "volCryostat"
+physics.producers.generator.BeamName:           "numi"
 
 physics.producers.generator.FluxCopyMethod: "DIRECT"
 
