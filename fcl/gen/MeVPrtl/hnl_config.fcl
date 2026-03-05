@@ -54,8 +54,8 @@ decay_hnl: {
   ReferenceUT4: 0
   ReferenceUM4: 1e-7
   ReferenceHNLMass: @local::hnlM
-  ReferenceRayLength: 7.549834e2 # sqrt(57) = 7.549834 = diagonal length of detector
-  ReferenceRayDistance: 110e2 #110m = distance from beam target to detector
+  ReferenceRayLength: 10.92e2 # sqrt(119.3) = 10.92 = diagonal length of detector
+  ReferenceRayDistance: 463.36e2 # 463.36m = distance from beam target to detector
   ReferenceHNLEnergyFromKaonEnergy: @local::kaon_energy
   WidthDecays: ["mu_pi", "e_pi", "nu_mu_mu", "nu_e_e", "nu_nu_nu", "nu_pi0", "nu_eta", "nu_etap", "nu_rho0", "nu_mu_e"]
   Verbose: false

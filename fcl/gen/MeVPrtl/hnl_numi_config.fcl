@@ -41,8 +41,8 @@ decay_hnl: {
   ReferenceUM4: 1e-7
   ReferenceUT4: 0
   ReferenceHNLMass: @local::hnlM
-  ReferenceRayLength: 2100 # 21m
-  ReferenceRayDistance: 10400 # 104m
+  ReferenceRayLength: 10.92e2 # sqrt(119.3) = 10.92 = diagonal length of detector
+  ReferenceRayDistance: 678.83e2 # 678m, distance from numi target to absorber
   ReferenceHNLEnergyFromKaonEnergy: 15. # GeV
 }
 
@@ -57,8 +57,8 @@ decay_tau_hnl: {
   ReferenceUM4: 0.
   ReferenceUT4: 1e-5
   ReferenceHNLMass: @local::tau_hnlM
-  ReferenceRayLength: 2100 # 21m
-  ReferenceRayDistance: 10400 # 104m
+  ReferenceRayLength: 10.92e2 # sqrt(119.3) = 10.92 = diagonal length of detector
+  ReferenceRayDistance: 678.83e2 # 678m, distance from numi target to absorber
   ReferenceHNLEnergyFromTauEnergy: 25. # GeV
 }
 
