@@ -1,0 +1,61 @@
+#include "numi_kaon_common.fcl"
+
+BEGIN_PROLOG
+
+# numi_coord_matrix =    np.array([
+#                        [ 0.9210385380402568, 0.0227135048039241207, 0.38880857519374290 ],
+#	                    [0.0000462540012621546684, 0.99829162468141475, -0.0584279894529063024],
+#                        [-0.38947144863934974, 0.0538324139386641073, 0.91946400794392302 ]
+#                        ])
+
+uboone_numi_beam2detector_rotation:     [ 0.9210385380402568, 0.0227135048039241207, 0.38880857519374290 ,
+	                                    0.0000462540012621546684, 0.99829162468141475, -0.0584279894529063024,
+                                        -0.38947144863934974, 0.0538324139386641073, 0.91946400794392302 ]
+
+uboone_numi_beam_origin: [0, 0, 0, 5502, 7259, 67270]
+
+# 10cm around the "Active-Bounding-Box"
+uboone_detector_box: [-10, 266, -126, 126, -10, 1046] #cm
+uboone_numi_solid_angle_box: 4.0e-05 # from numi target
+
+
+ray_trace_box: {
+  tool_type: RayTraceBox
+  # Volume: volCryostat
+  Box: @local::uboone_detector_box
+}
+
+rethrow_ray_trace_box: {
+  tool_type: ReThrowRayTraceBox
+  # Volume: volCryostat
+  Box: @local::uboone_detector_box
+
+  # weight computation
+  #ReferencePriamryEnergy: 15 # GeV
+  ReferenceLabSolidAngle: @local::uboone_numi_solid_angle_box
+  ReferencePrimPDG: 321 
+}
+
+weighted_ray_trace_box: {
+  tool_type: WeightedRayTraceBox
+  # Volume: volCryostat
+  Box: @local::uboone_detector_box
+
+  # weight computation
+  ReferenceLabSolidAngle: 1e-4
+  ReferencePrimaryEnergy: 15. # GeV
+  ReferencePrimPDG: 321 
+}
+
+mixedweight_ray_trace_box: {
+  tool_type: MixedWeightRayTraceBox
+  Box: @local::uboone_detector_box
+  ReferenceLabSolidAngle: 4e-4
+  MaxWeightFudge: 2.
+  ReferencePrimaryEnergy: 15. # GeV
+  ReferencePrimPDG: 321 
+  NThrow: 250
+  FixNSuccess: false
+}
+
+END_PROLOG

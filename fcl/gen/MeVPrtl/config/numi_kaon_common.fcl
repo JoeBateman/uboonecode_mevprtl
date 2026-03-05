@@ -1,0 +1,48 @@
+BEGIN_PROLOG
+
+empty_kaon: {
+  tool_type: EmptyKaonGen
+}
+
+# Taken from: https://github.com/SBNSoftware/icaruscode/blob/develop/fcl/gen/numi/GNuMIFlux.xml#L765
+icarus_numi_beam2detector_rotation: [ 0.921035925, 0.022715103,  0.388814672,
+                                                0, 0.998297825, -0.058321970,
+                                     -0.389477631, 0.053716629,  0.919468161]
+
+icarus_numi_beam_origin: [0, 0, 0, 4.503730e2, 80.153901e2, 795.112945e2] # cm
+
+# 10cm around the "Active-Bounding-Box"
+icarus_detector_box: [-368.49, 368.49, -191.86, 144.96, -904.950652270838, 904.950652270838]
+
+numi_kaon: {
+  tool_type: NuMiKaonGen
+  SearchPath: "/cvmfs/sbn.osgstorage.org/pnfs/fnal.gov/usr/sbn/persistent/stash/physics/beam/GENIE/NuMI/standard/v03_02/"
+  FluxFiles: ["*.root"]
+  TreeName: "dk2nuTree"
+  MetaTreeName: "dkmetaTree"
+  MaxFluxFileMB: 8192 # 8GB
+  FluxCopyMethod: DIRECT
+  RandomizeFiles: true
+}
+
+numi_tau: {
+  tool_type: TxtFileGen
+  SearchPath: "/cvmfs/sbn.osgstorage.org/pnfs/fnal.gov/usr/sbn/persistent/stash/physics-gputnam/numiflux-meson/"
+  FluxFiles: ["tau*.txt"]
+  RandomizeFiles: true
+  NSkipLines: 2
+  FluxCopyMethod: DIRECT
+  POTPerMeson: 2.253e6 # 6.06194e5
+  PDGCode: 15
+}
+
+numi_psuedoscalar: {
+  tool_type: TxtFileGen
+  SearchPath: "/cvmfs/sbn.osgstorage.org/pnfs/fnal.gov/usr/sbn/persistent/stash/physics-gputnam/numiflux-meson/"
+  FluxFiles: ["numi_icarus_incident_psuedoscalar*.txt"]
+  RandomizeFiles: true
+  NSkipLines: 1
+  FluxCopyMethod: DIRECT
+}
+
+END_PROLOG
