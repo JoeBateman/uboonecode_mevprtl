@@ -1,52 +1,59 @@
 #include "hnl_config.fcl"
 
 # service configuration
-#include "largeantmodules_microboone.fcl"
-#include "mcreco.fcl"
 #include "time_memory_tracker_microboone.fcl"
 #include "services_microboone.fcl"
-
-#include "standard_overlay_gen_griddriver.fcl"
 
 process_name: OverlayMeVPrtlGenBNB
 
 services:
 {
-  @table::microboone_simulation_services
-  TFileService: { fileName: "hists_prodMeVPrtl_HNL_uboone_%p-%tc.root" }
-  IFDH: {}
+  scheduler:    { defaultExceptions: false }    # Make all uncaught exceptions fatal.
+  # Load the service that manages root files for histograms.
+  TFileService: { fileName: "hist_gen_hnl_%p-%tc.root" }
   TimeTracker:             @local::microboone_time_tracker
   MemoryTracker:           @local::microboone_memory_tracker
   RandomNumberGenerator: {} #ART native random number generator
+  FileCatalogMetadata:  @local::art_file_catalog_mc
   @table::microboone_g4_services
+  IFDH: {}
+}
+
+
+
+source:
+{
+  module_type: RootInput
+  saveMemoryObjectThreshold: 0
+  maxEvents: -1
 }
 
 physics:
 {
   producers:
   {
-    rns:       { module_type: "RandomNumberSaver" }
+  
     generator: @local::hnl_gen
+    rns: { module_type: "RandomNumberSaver" }
   }
  
   simulate:  [ rns, generator ]
-  stream: [ out ]
-
   trigger_paths: [ simulate ]
-  end_paths:     [ stream ] 
+
+  stream1: [ out1 ]
+  end_paths: [ stream1 ] 
   
-} # physics
+}
 
 outputs: 
 {
-  out:
+  out1:
   {
     module_type: RootOutput
     fileName: "prodMeVPrtl_HNL_uboone_%p-%tc.root" # default file name, can override from command line with -o or --output
     dataTier: "simulated"
-    compressionLevel: 1
     saveMemoryObjectThreshold: 0
+    compressionLevel: 1
+    fastCloning: false
   }
 }
-
-services.NuRandomService.policy: "random"
