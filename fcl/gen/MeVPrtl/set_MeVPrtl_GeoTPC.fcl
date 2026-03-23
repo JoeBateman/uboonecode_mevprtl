@@ -1,0 +1,8 @@
+#uboone detector in det frame +10cm around detector
+
+uboone_detector_box: [-138, 138, -126, 126, 0, 1046] #cm
+uboone_bnb_solid_angle_box: 2.766e-5 #front face / detector distance ^2 = 2.56*2.32/463.4^2
+
+physics.producers.generator.RayTrace.Volume: @erase
+physics.producers.generator.RayTrace.Box: @local::uboone_detector_box
+physics.producers.generator.RayTrace.ReferenceSolidAngle: @local::uboone_bnb_solid_angle_box
