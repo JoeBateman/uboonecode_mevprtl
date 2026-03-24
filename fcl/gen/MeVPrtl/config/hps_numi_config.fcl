@@ -1,0 +1,105 @@
+#include "numi_kaon_uboone.fcl"
+BEGIN_PROLOG
+
+#Flux CONFIGS
+
+hpsM: 0.2
+
+kaon2hps: {
+    tool_type: Kaon2HiggsFlux
+    M: @local::hpsM # GeV/c^2
+    MixingAngle: 1e-3
+    IgnoreParentDecayTime: false
+    KDIFOnly: false
+    KDAROnly: false # KDAR from ABSORBER ONLY!
+    KDIFandBeamline: false # KDIF & non-absorber KDAR - orthogonal to KDAR only
+
+    MaxImportanceWeight: 1 #BNB gsimple flat weight at 1
+
+    Beam2DetectorRotation: @local::uboone_numi_beam2detector_rotation # uBooNE & SBND detector rotation is the same
+    BeamOrigin: @local::uboone_numi_beam_origin 
+
+    // timing config
+    SpillTimeConfig: "" #"evgb::EvtTimeFlat 10000 0" // 10us duration, no offset  
+}
+
+# RAY TRACE CONFIGS
+mcraytrace: @local::rethrow_ray_trace_box
+mcraytrace.ReferencePrtlMass: @local::hpsM # GeV
+mcraytrace.NThrows: 250 
+mcraytrace.ReferenceScndPDG: 211 # pion
+
+wgtraytrace: @local::weighted_ray_trace_box
+wgtraytrace.ReferencePrtlMass: @local::hpsM # GeV
+wgtraytrace.ReferenceScndPDG: 211 # pion
+
+
+mxdraytrace: @local::mixedweight_ray_trace_box
+mxdraytrace.ReferencePrtlMass: @local::hpsM # GeV
+mxdraytrace.ReferenceScndPDG: 211 # pion
+
+#Decay CONFIGS
+
+decay_hps: {
+    tool_type: HiggsMakeDecay
+    AllowElectronDecay: true
+    AllowMuonDecay: true
+    AllowPionDecay: true
+    AllowPi0Decay: true
+    AddTimeOfFlight: true
+  
+    ReferenceHiggsMass: @local::hpsM
+    ReferenceHiggsMixing: 1e-3
+    # ReferenceHiggsEnergy: not set in dissonant_hps, leaving for now
+    ReferenceRayLength: 10.92e2 # sqrt(119.3) = 10.92 = diagonal length of detector
+    ReferenceRayDistance: 678.83e2 # 678m, distance from numi target to absorber
+    ReferenceHNLEnergyFromKaonEnergy: 15. # GeV
+    Verbose: false
+}
+
+
+# Separate KDAR configs
+kaon2hps_kdar: @local::kaon2hps
+kaon2hps_kdar.ReferenceHNLEnergyFromKaonEnergy:  0.494
+
+mxdraytrace_kdar: @local::mixedweight_ray_trace_box
+mxdraytrace_kdar.ReferenceKaonEnergy: 0.494
+mxdraytrace_kdar.ReferencePrtlMass: @local::hpsM # GeV
+
+# Full Gen configs
+hps_gen: {
+    module_type: MeVPrtlGen
+    Deweight: false
+    Produce: true
+    AnaOutput: true
+    Verbose: false
+    MesonGen: @local::numi_kaon
+    Flux: @local::kaon2hps
+    RayTrace: @local::mxdraytrace
+    Decay: @local::decay_hps
+}
+
+hps_gen_kdar: {
+    module_type: MeVPrtlGen
+    Deweight: false
+    Produce: true
+    AnaOutput: true
+    Verbose: false
+    MesonGen: @local::numi_kaon
+    Flux: @local::kaon2hps_kdar
+    RayTrace: @local::mxdraytrace_kdar
+    Decay: @local::decay_hps
+}
+
+hps_test_raytrace: {
+    module_type: MeVPrtlTestRayTrace
+    MesonGen: @local::numi_kaon
+    Flux: @local::kaon2hps
+    RayTraces: [
+    @local::mcraytrace
+    , @local::wgtraytrace
+    , @local::mxdraytrace
+  ]
+}
+
+END_PROLOG
